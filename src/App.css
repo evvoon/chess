@@ -1,0 +1,25 @@
+:root {
+  --tile-size: 100px;
+  --light-tile: rgb(238 214 182);
+  --dark-tile: rgb(179 134 100);
+  --bg-color: #202020;
+}
+
+@media all and (max-width: 450px) {
+  :root {
+    --tile-size: 50px;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+  background: var(--bg-color);
+}
