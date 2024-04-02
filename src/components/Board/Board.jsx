@@ -1,4 +1,5 @@
 import { getCharacter } from "../../helper";
+import Pieces from "../Pieces/Pieces";
 import Files from "../bits/Files";
 import Ranks from "../bits/Ranks";
 import "./Board.css";
@@ -6,8 +7,7 @@ import "./Board.css";
 export default function Board() {
   const getClassName = (i, j) => {
     let c = "";
-    c += (i + j) % 2 === 0 ? "tile--light" : "tile--dark";
-    console.log(c);
+    c += (i + j) % 2 === 0 ? "tile--dark" : "tile--light";
     return c;
   };
 
@@ -17,7 +17,7 @@ export default function Board() {
 
   const files = Array(8)
     .fill()
-    .map((x, i) => getCharacter(i));
+    .map((x, i) => i + 1);
 
   return (
     <div className="board">
@@ -25,10 +25,15 @@ export default function Board() {
       <div className="tiles">
         {ranks.map((rank, i) =>
           files.map((file, j) => (
-            <div key={file + "-" + rank} className={getClassName(i, j)}></div>
+            <div
+              key={file + "-" + rank}
+              className={getClassName(9 - i, j)}
+            ></div>
           ))
         )}
       </div>
+
+      <Pieces />
 
       <Files files={files} />
     </div>
