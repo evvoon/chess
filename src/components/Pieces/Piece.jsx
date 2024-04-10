@@ -1,4 +1,5 @@
 export default function Piece({ rank, file, piece }) {
+  console.log({ piece });
   const onDragStart = (e) => {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", `${piece}, ${rank}, ${file}`);
