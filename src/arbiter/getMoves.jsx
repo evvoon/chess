@@ -117,3 +117,45 @@ export function getKingMoves({ position, piece, rank, file }) {
   });
   return moves;
 }
+
+export function getPawnMoves({ position, piece, rank, file }) {
+  const moves = [];
+  const dir = piece === "wp" ? 1 : -1;
+
+  if (!position?.[rank + dir][file]) {
+    // if next spot is available and its empty
+    moves.push([rank + dir, file]);
+  }
+
+  if (rank % 5 === 1) {
+    if (
+      position?.[rank + dir]?.[file] === "" &&
+      position?.[rank + dir + dir]?.[file] === ""
+    ) {
+      moves.push([rank + dir + dir, file]);
+    }
+  }
+
+  return moves;
+}
+
+export function getPawnCaptures({ position, piece, rank, file }) {
+  const moves = [];
+  const dir = piece === "wp" ? 1 : -1;
+  const enemy = piece[0] === "w" ? "b" : "w";
+
+  if (
+    position?.[rank + dir]?.[file - 1] &&
+    position?.[rank + dir]?.[file - 1].startsWith(enemy)
+  ) {
+    moves.push([rank + dir, file - 1]);
+  }
+  if (
+    position?.[rank + dir]?.[file + 1] &&
+    position?.[rank + dir]?.[file + 1].startsWith(enemy)
+  ) {
+    moves.push([rank + dir, file + 1]);
+  }
+
+  return moves;
+}

@@ -4,10 +4,10 @@ export function getCharacter({ file }) {
 
 export function createPosition() {
   const position = new Array(8).fill().map((x) => new Array(8).fill(""));
-  // for (let i = 0; i < 8; i++) {
-  //   position[1][i] = "wp";
-  //   position[6][i] = "bp";
-  // }
+  for (let i = 0; i < 8; i++) {
+    position[1][i] = "wp";
+    position[6][i] = "bp";
+  }
 
   position[0][0] = "wr";
   position[0][1] = "wn";
