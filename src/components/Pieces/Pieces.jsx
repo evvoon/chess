@@ -17,7 +17,7 @@ export default function Pieces() {
   const currentPosition = appState.position[appState.position.length - 1];
 
   function calculateCoords(e) {
-    const { width, left, top } = ref.current.getBoundingClientRect(); // width since size of screen can vary
+    const { top, left, width } = ref.current.getBoundingClientRect(); // width since size of screen can vary
 
     const size = width / 8;
 
@@ -27,24 +27,41 @@ export default function Pieces() {
   }
 
   const onDrop = (e) => {
-    // console.log("am i here");
-
-    const { x, y } = calculateCoords(e);
-
-    const [p, rank, file] = e.dataTransfer.getData("text").split(",");
+    e.preventDefault();
 
     const newPosition = copyPosition(currentPosition);
 
-    if (appState.candidateMoves?.find((m) => m[0] === x && m[1] === y)) {
-      newPosition[Number(rank)][Number(file)] = "";
-      newPosition[x][y] = p;
+    const { x, y } = calculateCoords(e);
 
-      dispatch(makeNewMove({ newPosition }));
+    let [p, rankStr, fileStr] = e.dataTransfer.getData("text").split(",");
+    const rank = Number(rankStr.trim());
+    const file = Number(fileStr.trim());
+
+    if (
+      rank >= 0 &&
+      rank < 8 &&
+      file >= 0 &&
+      file < 8 &&
+      x >= 0 &&
+      x < 8 &&
+      y >= 0 &&
+      y < 8
+    ) {
+      if (appState.candidateMoves.find((m) => m[0] === x && m[1] === y)) {
+        if (p.endsWith("p") && !newPosition[x][y] && x !== rank && y !== file) {
+          newPosition[rank][y] = "";
+        }
+
+        newPosition[rank][file] = "";
+        newPosition[x][y] = p;
+
+        dispatch(makeNewMove({ newPosition }));
+      }
+    } else {
+      console.error("Out of bounds", { x, y, rank, file });
     }
 
     dispatch(clearCandidates());
-    // console.log({ newPosition });
-    // setState(newPosition);
   };
 
   const onDragOver = (e) => e.preventDefault();

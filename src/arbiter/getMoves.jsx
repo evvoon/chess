@@ -139,22 +139,41 @@ export function getPawnMoves({ position, piece, rank, file }) {
   return moves;
 }
 
-export function getPawnCaptures({ position, piece, rank, file }) {
+export function getPawnCaptures({ position, prevPosition, piece, rank, file }) {
   const moves = [];
   const dir = piece === "wp" ? 1 : -1;
   const enemy = piece[0] === "w" ? "b" : "w";
-
+  // capture enemy to the left
   if (
     position?.[rank + dir]?.[file - 1] &&
     position?.[rank + dir]?.[file - 1].startsWith(enemy)
   ) {
     moves.push([rank + dir, file - 1]);
   }
+  // capture enemy to the right
   if (
     position?.[rank + dir]?.[file + 1] &&
     position?.[rank + dir]?.[file + 1].startsWith(enemy)
   ) {
     moves.push([rank + dir, file + 1]);
+  }
+
+  //En-Passant
+  const enemyPawn = dir === 1 ? "bp" : "wp";
+  const adjacentFiles = [file - 1, file + 1];
+  if (prevPosition) {
+    if ((dir === 1 && rank === 4) || (dir === -1 && rank === 3)) {
+      adjacentFiles.forEach((f) => {
+        if (
+          position?.[rank]?.[f] === enemyPawn &&
+          position?.[rank + dir + dir]?.[f] === "" &&
+          prevPosition?.[rank]?.[f] === "" &&
+          prevPosition?.[rank + dir + dir]?.[f] === enemyPawn
+        ) {
+          moves.push([rank + dir, f]);
+        }
+      });
+    }
   }
 
   return moves;
