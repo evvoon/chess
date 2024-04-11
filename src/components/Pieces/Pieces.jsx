@@ -1,10 +1,9 @@
-//@ts-check
 import "./Pieces.css";
 import Piece from "./Piece";
 import { useState, useRef, useEffect } from "react";
 import { copyPosition, createPosition } from "../../helper";
 import { useAppContext } from "../../contexts/Context";
-import { makeNewMove } from "../../reducer/actions/move";
+import { clearCandidates, makeNewMove } from "../../reducer/actions/move";
 import React from "react";
 
 export default function Pieces() {
@@ -13,13 +12,11 @@ export default function Pieces() {
   const { appState, dispatch } = useAppContext();
   // const [state, setState] = useState(createPosition());
 
-  useEffect(() => console.log(appState), [appState]);
+  // useEffect(() => console.log(appState), [appState]);
 
-  const currentPosition = appState.position[0];
+  const currentPosition = appState.position[appState.position.length - 1];
 
   function calculateCoords(e) {
-    console.log("i am here");
-    console.log(ref.current);
     const { width, left, top } = ref.current.getBoundingClientRect(); // width since size of screen can vary
 
     const size = width / 8;
@@ -30,7 +27,7 @@ export default function Pieces() {
   }
 
   const onDrop = (e) => {
-    console.log("am i here");
+    // console.log("am i here");
 
     const { x, y } = calculateCoords(e);
 
@@ -38,16 +35,20 @@ export default function Pieces() {
 
     const newPosition = copyPosition(currentPosition);
 
-    newPosition[Number(rank)][Number(file)] = "";
-    newPosition[x][y] = p;
+    if (appState.candidateMoves?.find((m) => m[0] === x && m[1] === y)) {
+      newPosition[Number(rank)][Number(file)] = "";
+      newPosition[x][y] = p;
 
-    dispatch(makeNewMove({ newPosition }));
+      dispatch(makeNewMove({ newPosition }));
+    }
+
+    dispatch(clearCandidates());
     // console.log({ newPosition });
     // setState(newPosition);
   };
 
   const onDragOver = (e) => e.preventDefault();
-  console.log(currentPosition);
+  // console.log(currentPosition);
 
   return (
     <div ref={ref} onDrop={onDrop} onDragOver={onDragOver} className="pieces">
