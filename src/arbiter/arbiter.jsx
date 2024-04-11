@@ -3,6 +3,7 @@ import {
   getBishopMoves,
   getKnightMoves,
   getRookMoves,
+  getKingMoves,
 } from "./getMoves";
 
 const arbiter = {
@@ -14,6 +15,8 @@ const arbiter = {
       return getBishopMoves({ position, piece, rank, file });
     if (piece.endsWith("q"))
       return getQueenMoves({ position, piece, rank, file });
+    if (piece.endsWith("k"))
+      return getKingMoves({ position, piece, rank, file });
   },
 };
 

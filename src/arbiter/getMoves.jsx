@@ -92,3 +92,28 @@ export function getQueenMoves({ position, piece, rank, file }) {
 
   return moves;
 }
+
+export function getKingMoves({ position, piece, rank, file }) {
+  const moves = [];
+  const us = piece[0]; // which color pieces is ours
+
+  const direction = [
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, -1],
+    [0, 1],
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+  ];
+
+  direction.forEach((dir) => {
+    const x = rank + dir[0];
+    const y = file + dir[1];
+    if (position?.[x]?.[y] !== undefined && !position[x][y].startsWith(us)) {
+      moves.push([x, y]);
+    }
+  });
+  return moves;
+}
