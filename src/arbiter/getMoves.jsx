@@ -83,3 +83,12 @@ export function getBishopMoves({ position, piece, rank, file }) {
   });
   return moves;
 }
+
+export function getQueenMoves({ position, piece, rank, file }) {
+  const moves = [
+    ...getRookMoves({ position, piece, rank, file }),
+    ...getBishopMoves({ position, piece, rank, file }),
+  ]; // queen moves is combination of rook and bishop
+
+  return moves;
+}
