@@ -2,7 +2,6 @@ import { copyPosition } from "../helper";
 
 export const movePiece = ({ position, piece, rank, file, x, y }) => {
   const newPosition = copyPosition(position);
-  console.log({ rank, file });
 
   if (piece.endsWith("k") && Math.abs(y - file) > 1) {
     if (y === 2) {

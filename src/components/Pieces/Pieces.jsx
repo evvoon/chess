@@ -8,7 +8,7 @@ import React from "react";
 import arbiter from "../../arbiter/arbiter";
 import openPromotion from "../../reducer/actions/popup";
 import { getCastleDirections } from "../../arbiter/getMoves";
-import { updateCastling } from "../../reducer/actions/game";
+import { detectStalemate, updateCastling } from "../../reducer/actions/game";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
@@ -61,6 +61,12 @@ export default function Pieces() {
       .map((value) => value.trim()); // trim removes the front n back spaces
 
     if (appState.candidateMoves.find((m) => m[0] === x && m[1] === y)) {
+      const opponent = piece.startsWith("b") ? "w" : "b";
+      const castleDirection =
+        appState.castleDirection[
+          `${piece.startsWith("b") ? "white" : "black"}`
+        ];
+
       if ((piece === "wp" && x === 7) || (piece === "bp" && x === 0)) {
         openPromotionBox({ rank, file, x, y });
 
@@ -78,6 +84,9 @@ export default function Pieces() {
         y,
       });
       dispatch(makeNewMove({ newPosition }));
+
+      if (arbiter.isStalemate(newPosition, opponent, castleDirection))
+        dispatch(detectStalemate());
     }
 
     dispatch(clearCandidates());

@@ -7,6 +7,9 @@ import Popup from "../Popup/Popup";
 import Files from "../bits/Files";
 import Ranks from "../bits/Ranks";
 import "./Board.css";
+import PromotionBox from "../Popup/PromotionBox/PromotionBox";
+
+import GameEnds from "../Popup/GameEnds/GameEnds";
 
 export default function Board() {
   const ranks = Array(8)
@@ -59,7 +62,10 @@ export default function Board() {
 
       <Pieces />
 
-      <Popup />
+      <Popup>
+        <PromotionBox />
+        <GameEnds />
+      </Popup>
 
       <Files files={files} />
     </div>

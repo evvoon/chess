@@ -355,12 +355,15 @@ export function getCastleDirections({ castleDirection, piece, rank, file }) {
 
 export function getKingPosition(position, player) {
   let kingPos;
+
   position.forEach((rank, x) => {
     rank.forEach((file, y) => {
-      if (position[x][y].startsWith(player) && position[x][y].endsWith("k"))
+      if (position[x][y].startsWith(player) && position[x][y].endsWith("k")) {
         kingPos = [x, y];
+      }
     });
   });
+
   return kingPos;
 }
 
