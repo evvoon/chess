@@ -7,6 +7,8 @@ import { clearCandidates, makeNewMove } from "../../reducer/actions/move";
 import React from "react";
 import arbiter from "../../arbiter/arbiter";
 import openPromotion from "../../reducer/actions/popup";
+import { getCastleDirections } from "../../arbiter/getMoves";
+import { updateCastling } from "../../reducer/actions/game";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
@@ -38,6 +40,18 @@ export default function Pieces() {
       })
     );
 
+  const updateCastlingState = ({ piece, rank, file }) => {
+    const direction = getCastleDirections({
+      castleDirection: appState.castleDirection,
+      piece,
+      rank,
+      file,
+    });
+    if (direction) {
+      dispatch(updateCastling(direction));
+    }
+  };
+
   const move = (e) => {
     const { x, y } = calculateCoords(e);
 
@@ -51,6 +65,9 @@ export default function Pieces() {
         openPromotionBox({ rank, file, x, y });
 
         return;
+      }
+      if (piece.endsWith("r") || piece.endsWith("k")) {
+        updateCastlingState({ piece, rank, file });
       }
       const newPosition = arbiter.performMove({
         position: currentPosition,
