@@ -1,3 +1,5 @@
+import arbiter from "../../arbiter/arbiter";
+import { getKingPosition } from "../../arbiter/getMoves";
 import { useAppContext } from "../../contexts/Context";
 import { getCharacter } from "../../helper";
 import Pieces from "../Pieces/Pieces";
@@ -18,6 +20,16 @@ export default function Board() {
   const { appState } = useAppContext();
   const position = appState.position[appState.position.length - 1];
 
+  const isChecked = (() => {
+    const isInCheck = arbiter.isPlayerInCheck({
+      positionAfterMove: position,
+      player: appState.turn,
+    });
+    if (isInCheck) return getKingPosition(position, appState.turn);
+
+    return null;
+  })();
+
   const getClassName = (i, j) => {
     let c = "tile";
     c += (i + j) % 2 === 0 ? " tile--dark" : " tile--light";
@@ -26,6 +38,8 @@ export default function Board() {
       if (position[i][j]) c += " attacking";
       else c += " highlight";
     }
+
+    if (isChecked && isChecked[0] === i && isChecked[1] === j) c += " checked";
     return c;
   };
 
