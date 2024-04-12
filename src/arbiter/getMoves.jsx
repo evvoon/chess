@@ -1,3 +1,5 @@
+import arbiter from "./arbiter";
+
 export function getRookMoves({ position, piece, rank, file }) {
   const moves = [];
   const us = piece[0]; // which color pieces is ours
@@ -193,12 +195,36 @@ export function getCastlingMoves({
   }
 
   if (piece.startsWith("w")) {
+    if (arbiter.isPlayerInCheck({ positionAfterMove: position, player: "w" }))
+      return moves;
     if (
       ["left", "both"].includes(castleDirection) &&
       !position[0][3] &&
       !position[0][2] &&
       !position[0][1] &&
-      position[0][0] === "wr"
+      position[0][0] === "wr" &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 0,
+          y: 3,
+        }),
+        player: "w",
+      }) &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 0,
+          y: 2,
+        }),
+        player: "w",
+      })
     ) {
       moves.push([0, 2]);
     }
@@ -206,17 +232,63 @@ export function getCastlingMoves({
       ["right", "both"].includes(castleDirection) &&
       !position[0][5] &&
       !position[0][6] &&
-      position[0][7] === "wr"
+      position[0][7] === "wr" &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 0,
+          y: 5,
+        }),
+        player: "w",
+      }) &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 0,
+          y: 6,
+        }),
+        player: "w",
+      })
     ) {
       moves.push([0, 6]);
     }
   } else {
+    if (arbiter.isPlayerInCheck({ positionAfterMove: position, player: "b" }))
+      return moves;
     if (
       ["left", "both"].includes(castleDirection) &&
       !position[7][3] &&
       !position[7][2] &&
       !position[7][1] &&
-      position[7][0] === "br"
+      position[7][0] === "br" &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 7,
+          y: 3,
+        }),
+        player: "b",
+      }) &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 7,
+          y: 2,
+        }),
+        player: "b",
+      })
     ) {
       moves.push([7, 2]);
     }
@@ -224,7 +296,29 @@ export function getCastlingMoves({
       ["right", "both"].includes(castleDirection) &&
       !position[7][5] &&
       !position[7][6] &&
-      position[7][7] === "br"
+      position[7][7] === "br" &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 7,
+          y: 5,
+        }),
+        player: "b",
+      }) &&
+      !arbiter.isPlayerInCheck({
+        positionAfterMove: arbiter.performMove({
+          position,
+          piece,
+          rank,
+          file,
+          x: 7,
+          y: 6,
+        }),
+        player: "b",
+      })
     ) {
       moves.push([7, 6]);
     }
