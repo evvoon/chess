@@ -12,6 +12,7 @@ import {
   detectStalemate,
   updateCastling,
   detectInsufficientMaterial,
+  detectCheckMate,
 } from "../../reducer/actions/game";
 
 export default function Pieces() {
@@ -93,6 +94,8 @@ export default function Pieces() {
         dispatch(detectStalemate());
       } else if (arbiter.insufficientMaterial(newPosition)) {
         dispatch(detectInsufficientMaterial());
+      } else if (arbiter.isCheckMate(newPosition, opponent, castleDirection)) {
+        dispatch(detectCheckMate(piece[0]));
       }
     }
 

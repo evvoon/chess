@@ -8,6 +8,7 @@ const actionTypes = {
   PROMOTION_CLOSE: "PROMOTION_CLOSE",
   STALEMATE: "STALEMATE",
   INSUFFICIENT_MATERIAL: "INSUFFICIENT_MATERIAL",
+  WIN: "WIN",
 };
 
 export default actionTypes;

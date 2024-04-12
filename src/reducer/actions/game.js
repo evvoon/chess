@@ -14,6 +14,13 @@ export function detectStalemate() {
   };
 }
 
+export function detectCheckMate(winner) {
+  return {
+    type: actionTypes.WIN,
+    payload: winner,
+  };
+}
+
 export function setupNewGame() {
   return {
     type: actionTypes.NEW_GAME,
