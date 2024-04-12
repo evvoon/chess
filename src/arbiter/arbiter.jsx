@@ -7,6 +7,8 @@ import {
   getPawnMoves,
   getPawnCaptures,
   getCastlingMoves,
+  getKingPosition,
+  getPieces,
 } from "./getMoves";
 import { movePawn, movePiece } from "./move";
 
@@ -33,6 +35,8 @@ const arbiter = {
     file,
   }) {
     let moves = this.getRegularMoves({ position, piece, rank, file });
+    const notInCheckMoves = [];
+
     if (piece.endsWith("p")) {
       moves = [
         ...moves,
@@ -45,7 +49,24 @@ const arbiter = {
         ...getCastlingMoves({ position, castleDirection, piece, rank, file }),
       ];
     }
-    return moves;
+
+    moves.forEach(([x, y]) => {
+      const positionAfterMove = this.performMove({
+        position,
+        piece,
+        rank,
+        file,
+        x,
+        y,
+      });
+
+      if (
+        !this.isPlayerInCheck({ positionAfterMove, position, player: piece[0] })
+      ) {
+        notInCheckMoves.push([x, y]);
+      }
+    });
+    return notInCheckMoves;
   },
   performMove: function ({ position, piece, rank, file, x, y }) {
     if (piece.endsWith("p")) {
@@ -53,6 +74,34 @@ const arbiter = {
     } else {
       return movePiece({ position, piece, rank, file, x, y });
     }
+  },
+
+  isPlayerInCheck: function ({ positionAfterMove, position, player }) {
+    const enemy = player.startsWith("w") ? "b" : "w";
+    let kingPos = getKingPosition(positionAfterMove, player);
+    const enemyPieces = getPieces(positionAfterMove, enemy);
+
+    const enemyMoves = enemyPieces.reduce(
+      (acc, p) =>
+        (acc = [
+          ...acc,
+          ...(p.piece.endsWith("p")
+            ? getPawnCaptures({
+                position: positionAfterMove,
+                prevPosition: position,
+                ...p,
+              })
+            : this.getRegularMoves({
+                position: positionAfterMove,
+                ...p,
+              })),
+        ]),
+      []
+    );
+
+    if (enemyMoves.some(([x, y]) => kingPos[0] === x && kingPos[1] === y))
+      return true;
+    else return false;
   },
 };
 
