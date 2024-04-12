@@ -6,6 +6,7 @@ import { useAppContext } from "../../contexts/Context";
 import { clearCandidates, makeNewMove } from "../../reducer/actions/move";
 import React from "react";
 import arbiter from "../../arbiter/arbiter";
+import openPromotion from "../../reducer/actions/popup";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
@@ -27,6 +28,16 @@ export default function Pieces() {
     return { x, y };
   }
 
+  const openPromotionBox = ({ rank, file, x, y }) =>
+    dispatch(
+      openPromotion({
+        rank: Number(rank),
+        file: Number(file),
+        x,
+        y,
+      })
+    );
+
   const move = (e) => {
     const { x, y } = calculateCoords(e);
 
@@ -36,6 +47,11 @@ export default function Pieces() {
       .map((value) => value.trim()); // trim removes the front n back spaces
 
     if (appState.candidateMoves.find((m) => m[0] === x && m[1] === y)) {
+      if ((piece === "wp" && x === 7) || (piece === "bp" && x === 0)) {
+        openPromotionBox({ rank, file, x, y });
+
+        return;
+      }
       const newPosition = arbiter.performMove({
         position: currentPosition,
         piece,
