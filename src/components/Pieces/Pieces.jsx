@@ -8,7 +8,11 @@ import React from "react";
 import arbiter from "../../arbiter/arbiter";
 import openPromotion from "../../reducer/actions/popup";
 import { getCastleDirections } from "../../arbiter/getMoves";
-import { detectStalemate, updateCastling } from "../../reducer/actions/game";
+import {
+  detectStalemate,
+  updateCastling,
+  detectInsufficientMaterial,
+} from "../../reducer/actions/game";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
@@ -85,8 +89,11 @@ export default function Pieces() {
       });
       dispatch(makeNewMove({ newPosition }));
 
-      if (arbiter.isStalemate(newPosition, opponent, castleDirection))
+      if (arbiter.isStalemate(newPosition, opponent, castleDirection)) {
         dispatch(detectStalemate());
+      } else if (arbiter.insufficientMaterial(newPosition)) {
+        dispatch(detectInsufficientMaterial());
+      }
     }
 
     dispatch(clearCandidates());

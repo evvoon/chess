@@ -20,3 +20,9 @@ export function setupNewGame() {
     payload: initGame,
   };
 }
+
+export function detectInsufficientMaterial() {
+  return {
+    type: actionTypes.INSUFFICIENT_MATERIAL,
+  };
+}
