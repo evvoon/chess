@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@neoconfetti/react':
+    specifier: ^0.1.1
+    version: 0.1.1
   '@neodrag/react':
     specifier: ^2.0.3
     version: 2.0.3
@@ -566,6 +569,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@neoconfetti/react@0.1.1:
+    resolution: {integrity: sha512-OqKn/QZYkrCaMBg/a1JTjG1Th0n7YPopIHctqgBi3C34bTV2wbrKJPCIDuNSltsaEpVWjQPbhLYwRpNUMnqhnQ==}
+    dev: false
 
   /@neodrag/react@2.0.3:
     resolution: {integrity: sha512-VtubEZzyB+mmi6bZYKay/UmMuWsG2rsiAV7+O7iLN4YXKOOa7TxJT3alnLRqkntII8X48h2Hs7jSjosqxuAxDQ==}

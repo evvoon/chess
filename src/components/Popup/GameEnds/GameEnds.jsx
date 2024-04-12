@@ -1,10 +1,9 @@
 import { Status } from "../../../constant";
 import { useAppContext } from "../../../contexts/Context";
-import { copyPosition } from "../../../helper";
-import { clearCandidates, makeNewMove } from "../../../reducer/actions/move";
 import "./GameEnds.css";
 import "../Popup.css";
 import { setupNewGame } from "../../../reducer/actions/game";
+import { Confetti } from "@neoconfetti/react"; // Import Confetti
 
 export default function Popup({ onClosePopup }) {
   const {
@@ -22,6 +21,16 @@ export default function Popup({ onClosePopup }) {
 
   return (
     <div className="popup--inner popup--inner__center">
+      {isWin && (
+        <Confetti
+          class="confetti"
+          duration={4000}
+          force={0.4}
+          particleCount={180}
+          stageHeight={1500}
+        />
+      )}
+
       <h1>{isWin ? status : "Draw"}</h1>
       <p>{!isWin && status}</p>
       <div className={status}></div>

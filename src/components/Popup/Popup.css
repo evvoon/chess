@@ -31,3 +31,10 @@
   font-size: 1.2em;
   margin: 0 0 1em 0;
 }
+
+.confetti {
+  translate: -200px -100px;
+  position: fixed;
+  top: 50%;
+  left: 90%;
+}
