@@ -14,14 +14,12 @@ import {
   detectInsufficientMaterial,
   detectCheckMate,
 } from "../../reducer/actions/game";
+import { getNewMoveNotation } from "../../helper";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
 
   const { appState, dispatch } = useAppContext();
-  // const [state, setState] = useState(createPosition());
-
-  // useEffect(() => console.log(appState), [appState]);
 
   const currentPosition = appState.position[appState.position.length - 1];
 
@@ -88,7 +86,16 @@ export default function Pieces() {
         x,
         y,
       });
-      dispatch(makeNewMove({ newPosition }));
+      const newMove = getNewMoveNotation({
+        piece,
+        rank,
+        file,
+        x,
+        y,
+        position: currentPosition,
+      });
+
+      dispatch(makeNewMove({ newPosition, newMove }));
 
       if (arbiter.isStalemate(newPosition, opponent, castleDirection)) {
         dispatch(detectStalemate());

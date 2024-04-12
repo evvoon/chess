@@ -41,8 +41,17 @@ export default function Popup({ onClosePopup }) {
     newPosition[promotionSquare.rank][promotionSquare.file] = "";
     newPosition[promotionSquare.x][promotionSquare.y] = color + option;
 
+    const newMove = getNewMoveNotation({
+      ...appState.selectedPiece,
+      x: promotionSquare.rank,
+      y: promotionSquare.file,
+      position: appState.position[appState.position.length - 1],
+      promotesTo: option,
+    });
+
     dispatch(clearCandidates());
-    dispatch(makeNewMove({ newPosition }));
+
+    dispatch(makeNewMove({ newPosition, newMove }));
   };
 
   return (
