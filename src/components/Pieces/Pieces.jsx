@@ -5,6 +5,7 @@ import { copyPosition, createPosition } from "../../helper";
 import { useAppContext } from "../../contexts/Context";
 import { clearCandidates, makeNewMove } from "../../reducer/actions/move";
 import React from "react";
+import arbiter from "../../arbiter/arbiter";
 
 export default function Pieces() {
   const ref = useRef(); // to get the posn of the DOM elements
@@ -26,42 +27,33 @@ export default function Pieces() {
     return { x, y };
   }
 
-  const onDrop = (e) => {
-    e.preventDefault();
-
-    const newPosition = copyPosition(currentPosition);
-
+  const move = (e) => {
     const { x, y } = calculateCoords(e);
 
-    let [p, rankStr, fileStr] = e.dataTransfer.getData("text").split(",");
-    const rank = Number(rankStr.trim());
-    const file = Number(fileStr.trim());
+    const [piece, rank, file] = e.dataTransfer
+      .getData("text")
+      .split(",")
+      .map((value) => value.trim()); // trim removes the front n back spaces
 
-    if (
-      rank >= 0 &&
-      rank < 8 &&
-      file >= 0 &&
-      file < 8 &&
-      x >= 0 &&
-      x < 8 &&
-      y >= 0 &&
-      y < 8
-    ) {
-      if (appState.candidateMoves.find((m) => m[0] === x && m[1] === y)) {
-        if (p.endsWith("p") && !newPosition[x][y] && x !== rank && y !== file) {
-          newPosition[rank][y] = "";
-        }
-
-        newPosition[rank][file] = "";
-        newPosition[x][y] = p;
-
-        dispatch(makeNewMove({ newPosition }));
-      }
-    } else {
-      console.error("Out of bounds", { x, y, rank, file });
+    if (appState.candidateMoves.find((m) => m[0] === x && m[1] === y)) {
+      const newPosition = arbiter.performMove({
+        position: currentPosition,
+        piece,
+        rank,
+        file,
+        x,
+        y,
+      });
+      dispatch(makeNewMove({ newPosition }));
     }
 
     dispatch(clearCandidates());
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+
+    move(e);
   };
 
   const onDragOver = (e) => e.preventDefault();
