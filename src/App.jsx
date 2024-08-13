@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Board from "./components/Board/Board";
 import { initGame } from "./constant";
@@ -11,15 +11,31 @@ import TakeBack from "./components/Control/bits/TakeBack";
 
 export default function App() {
   const [appState, dispatch] = useReducer(reducer, initGame);
+  const [gameStarted, setGameStarted] = useState(false);
 
   const providerState = {
     appState,
     dispatch,
   };
 
+  useEffect(() => {
+    const handleDragStart = () => {
+      setGameStarted(true);
+    };
+
+    document.addEventListener("dragstart", handleDragStart);
+
+    return () => {
+      document.removeEventListener("dragstart", handleDragStart);
+    };
+  }, []);
+
   return (
     <AppContext.Provider value={providerState}>
       <div className="App">
+        {!gameStarted && (
+          <div className="start-message">Drag the pieces to start</div>
+        )}
         <Board />
         <Control>
           <MovesList />
